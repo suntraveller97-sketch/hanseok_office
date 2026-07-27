@@ -214,7 +214,7 @@
 
 | 종류      | 저장 위치          |
 | ------- | -------------- |
-| 아이디어·대본 | [ 노션: https://www.notion.so/AI-0048ec2e413a44bf8fb0dc07a0b89832?pvs=4 ] |
+| 아이디어·대본 | [ 노션: https://app.notion.com/p/SCENEMAGAZINE_official-2553fbe4e44980eb9b95f2b407208239 ] |
 | 이미지·영상  | [ 위 노션 페이지에서 통합 관리 ]    |
 | 성과 기록   | [ 위 노션 페이지에서 통합 관리 ]      |
 
