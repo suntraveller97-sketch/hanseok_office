@@ -102,8 +102,8 @@ input[type=range] { accent-color: var(--accent); }
 .litem { display: flex; align-items: center; gap: 6px; }
 .dot { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--ink); flex: none; }
 
-.stage-row { display: grid; grid-template-columns: 1fr 240px; gap: 16px; align-items: start; }
-@media (max-width: 880px) { .stage-row { grid-template-columns: 1fr; } }
+.stage-row { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: start; }
+@media (max-width: 920px) { .stage-row { grid-template-columns: 1fr; } }
 
 .plan-wrap {
   border: 1px solid var(--rule); background: var(--paper-2);
@@ -118,11 +118,33 @@ canvas#stage { display: block; cursor: pointer; }
 }
 .caption b { color: var(--accent); }
 
-.steplist {
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+.panel {
   border: 1px solid var(--rule); background: var(--paper-2);
   padding: 12px; font-family: "Plex Mono", ui-monospace, monospace; font-size: 11.5px;
 }
-.steplist .stitle { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--ink-dim); margin-bottom: 10px; }
+.panel .ptitle {
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--ink-dim);
+  margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+}
+.panel .ptitle .badge {
+  background: var(--accent); color: var(--paper); border-radius: 999px;
+  font-size: 10px; padding: 1px 7px; letter-spacing: 0;
+}
+
+/* dashboard */
+.clock { font-size: 20px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.clock .stepnow { font-size: 11px; color: var(--ink-dim); font-weight: 500; margin-top: 2px; }
+.progressbar { display: flex; gap: 2px; margin: 10px 0 12px; }
+.progressbar i { flex: 1; height: 5px; background: var(--rule); border-radius: 2px; }
+.progressbar i.on { background: var(--accent); }
+.stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.stat-tile { text-align: center; padding: 6px 2px; background: var(--floor); border: 1px solid var(--rule); }
+.stat-tile .tiledot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; border: 1.3px solid var(--ink); margin-bottom: 3px; }
+.stat-tile .n { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+.stat-tile .l { font-size: 9px; color: var(--ink-dim); margin-top: 2px; line-height: 1.2; }
+
+/* step list (reuses .panel) */
 .stepitem { display: flex; gap: 8px; padding: 5px 4px; border-radius: 2px; color: var(--ink-dim); align-items: flex-start; line-height: 1.4; }
 .stepitem .code { flex: none; width: 18px; color: var(--ink-dim); }
 .stepitem.done { color: var(--ink-dim); }
@@ -131,17 +153,32 @@ canvas#stage { display: block; cursor: pointer; }
 .stepitem.current .code { color: var(--accent); }
 .stepitem.gate.current { color: var(--accent); }
 
-#gatebox {
-  display: none; margin-top: 10px; padding: 12px; border: 1.5px dashed var(--accent);
-  font-family: "Plex Mono", monospace; font-size: 12px; color: var(--ink);
+/* approval inbox */
+#inboxEmpty { color: var(--ink-dim); }
+.inbox-card {
+  border: 1.5px dashed var(--accent); padding: 10px; margin-bottom: 4px;
 }
-#gatebox b { color: var(--accent); display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+.inbox-card.resolved { border-style: solid; border-color: var(--st-done); opacity: 0.75; }
+.inbox-card .from { font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.inbox-card ol { margin: 0 0 8px; padding-left: 18px; }
+.inbox-card li { margin-bottom: 3px; line-height: 1.4; }
+.inbox-card .score { color: var(--ink-dim); }
+.inbox-card .status-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
+.inbox-card.resolved .status-tag { color: var(--st-done); }
 #btn-approve {
   width: 100%; background: var(--accent); color: var(--paper); border: none;
   font-family: "Plex Mono", monospace; font-weight: 700; font-size: 12.5px;
-  padding: 10px; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 10px; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 4px;
 }
 #btn-approve:hover { opacity: 0.88; }
+#btn-approve:disabled { opacity: 0.5; cursor: default; }
+
+/* chat log */
+.chatlog-scroll { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.chatline { line-height: 1.45; }
+.chatline .who { font-weight: 700; color: var(--accent); }
+.chatline .dept { color: var(--ink-dim); font-size: 10px; }
+#chatEmpty { color: var(--ink-dim); }
 
 #tooltip {
   position: absolute; pointer-events: none; z-index: 5;
@@ -172,7 +209,7 @@ footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--rule);
   </div>
 
   <div class="toolbar">
-    <button class="act" id="btn-scenario">▶ 하루 시나리오 시작</button>
+    <button class="act" id="btn-scenario">07:00 출근하기</button>
     <button class="act" id="btn-play">일시정지</button>
     <div class="speedwrap">
       <span>SPEED</span>
@@ -205,14 +242,33 @@ footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--rule);
       <canvas id="stage"></canvas>
       <div id="tooltip"></div>
     </div>
-    <div class="steplist">
-      <div class="stitle">하루 12단계</div>
-      <div id="steps"></div>
-      <div id="gatebox">
-        <b>★ 대표 승인 대기</b>
-        아래 버튼을 누르기 전까지 ⑧번으로 진행하지 않습니다.
-        <button id="btn-approve" style="margin-top:10px;">승인할게</button>
+    <div class="sidebar">
+
+      <div class="panel" id="dashboard">
+        <div class="ptitle">대시보드</div>
+        <div class="clock"><span id="clockTime">06:50</span><div class="stepnow" id="clockStep">출근 전</div></div>
+        <div class="progressbar" id="progressbar"></div>
+        <div class="stat-row" id="statRow"></div>
       </div>
+
+      <div class="panel">
+        <div class="ptitle">하루 12단계</div>
+        <div id="steps"></div>
+      </div>
+
+      <div class="panel">
+        <div class="ptitle">결재함 <span class="badge" id="inboxBadge" style="display:none;">1</span></div>
+        <div id="inboxEmpty">대표 승인이 필요한 안건이 여기 표시됩니다.</div>
+        <div id="inboxBody"></div>
+      </div>
+
+      <div class="panel">
+        <div class="ptitle">대화 로그</div>
+        <div class="chatlog-scroll" id="chatlog">
+          <div id="chatEmpty">아직 나눈 대화가 없습니다.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -380,9 +436,84 @@ function wrapText(ctx, text, maxWidth) {
 
 function say(e, text, ms) {
   e.speech = text;
+  logChat(e, text);
   return sleep(ms || Math.min(4200, 1100 + text.length * 90));
 }
 function clearSay(e) { e.speech = null; }
+
+// ---------- 대화 로그 ----------
+function logChat(e, text) {
+  const empty = document.getElementById('chatEmpty');
+  if (empty) empty.remove();
+  const log = document.getElementById('chatlog');
+  const row = document.createElement('div');
+  row.className = 'chatline';
+  row.innerHTML = `<span class="who">${e.name}</span> <span class="dept">${e.dept} · ${e.role}</span><br>${text}`;
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ---------- 결재함 ----------
+const PENDING_APPROVAL = {
+  from: '기획 1팀 · 강태오 팀장',
+  items: [
+    { title: '오늘 가야 할 5곳 — 이번 주 전국 팝업·전시 한 줄 요약', score: 95 },
+    { title: 'BANKSY: Still Here — 매진 전에 가야 하는 3가지 이유', score: 93 },
+    { title: '강남 팝업 동선 정리 — 구찌 × TWL×오유글라스', score: 92 },
+  ],
+};
+
+function showInboxPending() {
+  document.getElementById('inboxEmpty').style.display = 'none';
+  document.getElementById('inboxBadge').style.display = 'inline-block';
+  document.getElementById('inboxBadge').textContent = '1';
+  document.getElementById('inboxBody').innerHTML = `
+    <div class="inbox-card" id="inboxCard">
+      <div class="status-tag" id="inboxTag">승인 대기</div>
+      <div class="from">${PENDING_APPROVAL.from}</div>
+      <ol>
+        ${PENDING_APPROVAL.items.map(it => `<li>${it.title} <span class="score">— ${it.score}점</span></li>`).join('')}
+      </ol>
+      <button id="btn-approve">승인할게</button>
+    </div>`;
+}
+function resolveInboxApproved() {
+  document.getElementById('inboxBadge').style.display = 'none';
+  const card = document.getElementById('inboxCard');
+  if (card) {
+    card.classList.add('resolved');
+    document.getElementById('inboxTag').textContent = '✓ 승인 완료';
+  }
+}
+
+// ---------- 대시보드 ----------
+const STATUS_ORDER = ['done','working','approval','blocked','waiting'];
+const STATUS_SHORT = { done:'완료', working:'진행중', approval:'승인대기', blocked:'연동대기', waiting:'대기' };
+const STEP_MINUTES = [10, 25, 15, 70, 40, 20, 0, 35, 90, 15, 30, 20]; // fictional pacing, ⑦ holds until approved
+function formatClock(mins) {
+  const total = 7*60 + mins;
+  const h = Math.floor(total/60) % 24, m = total % 60;
+  return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+}
+function renderDashboard(stepIdx) {
+  const bar = document.getElementById('progressbar');
+  bar.innerHTML = STEPS.map((_, i) => `<i class="${i <= stepIdx ? 'on' : ''}"></i>`).join('');
+
+  let mins = 0;
+  for (let i = 0; i < stepIdx; i++) mins += STEP_MINUTES[i];
+  document.getElementById('clockTime').textContent = stepIdx < 0 ? '06:50' : formatClock(mins);
+  document.getElementById('clockStep').textContent = stepIdx < 0 ? '출근 전'
+    : STEPS[stepIdx].code + ' ' + STEPS[stepIdx].title;
+
+  const counts = { done:0, working:0, approval:0, blocked:0, waiting:0 };
+  employees.forEach(e => counts[e.status]++);
+  document.getElementById('statRow').innerHTML = STATUS_ORDER.map(s => `
+    <div class="stat-tile">
+      <span class="tiledot" style="background:${cvar('--st-'+s)}"></span>
+      <div class="n">${counts[s]}</div>
+      <div class="l">${STATUS_SHORT[s]}</div>
+    </div>`).join('');
+}
 
 // ---------- meeting choreography: walk in facing pairs, speak in turn, walk back ----------
 function assignMeetingSeats(n) {
@@ -426,13 +557,13 @@ function runGate(step) {
     }
     people.forEach(e => { e.anim = 'sit'; });
     highlightDept(people.map(e => e.dept));
+    showInboxPending();
 
-    const gatebox = document.getElementById('gatebox');
     const approveBtn = document.getElementById('btn-approve');
-    gatebox.style.display = 'block';
     const onApprove = async () => {
       approveBtn.removeEventListener('click', onApprove);
-      gatebox.style.display = 'none';
+      approveBtn.disabled = true;
+      resolveInboxApproved();
       clearHighlight();
       for (const name of step.approvedDept || []) {
         const emp = byName(name);
@@ -440,6 +571,7 @@ function runGate(step) {
       }
       await Promise.all(people.map(e => sendToAsync(e, e.deskX, e.deskY)));
       people.forEach(e => { e.anim = statusAnim(e.status); });
+      renderDashboard(STEPS.indexOf(step));
       resolve();
     };
     approveBtn.addEventListener('click', onApprove);
@@ -556,6 +688,7 @@ async function playScenario() {
   for (let i = 0; i < STEPS.length; i++) {
     const step = STEPS[i];
     renderStepList(i, done);
+    renderDashboard(i);
     setCaption(step.code + ' ' + step.title + (step.caption ? ' — ' + step.caption : ''));
     if (step.type === 'commute') await runCommute();
     else if (step.type === 'meeting') await runMeeting(step.participants, step.lines);
@@ -563,6 +696,7 @@ async function playScenario() {
     else if (step.type === 'gate') await runGate(step);
     else if (step.type === 'brief') await runBrief(step);
     done.add(i);
+    renderDashboard(i);
   }
   renderStepList(-1, done);
   setCaption('⑫ 비서실 브리핑까지 완료 — 오늘 업무 종료');
@@ -570,6 +704,7 @@ async function playScenario() {
 }
 
 renderStepList(-1, new Set());
+renderDashboard(-1);
 document.getElementById('btn-scenario').addEventListener('click', playScenario);
 
 // ---------- rendering ----------
