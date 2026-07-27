@@ -188,6 +188,28 @@ canvas#stage { display: block; cursor: pointer; }
 .chatline .dept { color: var(--muted); font-size: 10px; }
 #chatEmpty { color: var(--muted); }
 
+/* CEO command console */
+.cmdlog-scroll { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px; margin-bottom: 10px; }
+#cmdEmpty { color: var(--muted); line-height: 1.5; }
+.cmdrow-user { color: var(--muted); text-align: right; }
+.cmdrow-user b { color: var(--ink); font-weight: 700; }
+.cmdrow-user::before { content: "대표 › "; color: var(--muted); }
+.cmdrow-reply { line-height: 1.5; color: var(--ink); }
+.cmdrow-reply .who { font-weight: 700; color: var(--st-working); }
+.cmdinput-row { display: flex; gap: 6px; }
+#cmdInput {
+  flex: 1; min-width: 0; background: var(--panel-2); border: 2px solid var(--border); color: var(--ink);
+  font-family: "Plex Mono", monospace; font-size: 12px; padding: 8px 10px;
+}
+#cmdInput:focus { outline: none; border-color: var(--accent); }
+#cmdInput::placeholder { color: var(--muted); }
+#cmdSend {
+  background: var(--accent); color: var(--accent-ink); border: 2px solid var(--outline);
+  font-family: "Plex Mono", monospace; font-weight: 700; font-size: 12px;
+  padding: 8px 12px; cursor: pointer; box-shadow: 3px 3px 0 var(--outline);
+}
+#cmdSend:hover { opacity: 0.9; }
+
 #tooltip {
   position: absolute; pointer-events: none; z-index: 5;
   background: var(--panel); color: var(--ink); font-family: "Plex Mono", monospace;
@@ -256,6 +278,17 @@ footer { margin-top: 28px; padding-top: 14px; border-top: 2px solid var(--border
       <div id="tooltip"></div>
     </div>
     <div class="sidebar">
+
+      <div class="panel" id="cmdPanel">
+        <div class="ptitle">대표 지시창</div>
+        <div class="cmdlog-scroll" id="cmdLog">
+          <div id="cmdEmpty">"현황 보고" · "왜 늦어져?" · "회의 소집" · "지금 브리핑" · 부서명·이름 · "승인할게"를 입력해보세요.</div>
+        </div>
+        <div class="cmdinput-row">
+          <input type="text" id="cmdInput" placeholder="대표 지시…" autocomplete="off">
+          <button id="cmdSend">전송</button>
+        </div>
+      </div>
 
       <div class="panel" id="dashboard">
         <div class="ptitle">대시보드</div>
@@ -514,6 +547,12 @@ function formatClock(mins) {
   const h = Math.floor(total/60) % 24, m = total % 60;
   return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
 }
+function getCounts() {
+  const counts = { done:0, working:0, approval:0, blocked:0, waiting:0 };
+  employees.forEach(e => counts[e.status]++);
+  return counts;
+}
+
 function renderDashboard(stepIdx) {
   const bar = document.getElementById('progressbar');
   bar.innerHTML = STEPS.map((_, i) => `<i class="${i <= stepIdx ? 'on' : ''}"></i>`).join('');
@@ -524,8 +563,7 @@ function renderDashboard(stepIdx) {
   document.getElementById('clockStep').textContent = stepIdx < 0 ? '출근 전'
     : STEPS[stepIdx].code + ' ' + STEPS[stepIdx].title;
 
-  const counts = { done:0, working:0, approval:0, blocked:0, waiting:0 };
-  employees.forEach(e => counts[e.status]++);
+  const counts = getCounts();
   document.getElementById('statRow').innerHTML = STATUS_ORDER.map(s => `
     <div class="stat-tile ${s===selectedStat?'active':''}" data-status="${s}">
       <span class="tiledot" style="background:${cvar('--st-'+s)}"></span>
@@ -598,11 +636,13 @@ function runGate(step) {
     people.forEach(e => { e.anim = 'sit'; });
     highlightDept(people.map(e => e.dept));
     showInboxPending();
+    gatePendingStep = step;
 
     const approveBtn = document.getElementById('btn-approve');
     const onApprove = async () => {
       approveBtn.removeEventListener('click', onApprove);
       approveBtn.disabled = true;
+      gatePendingStep = null;
       resolveInboxApproved();
       clearHighlight();
       for (const name of step.approvedDept || []) {
@@ -720,13 +760,189 @@ function renderStepList(currentIdx, doneSet) {
   }).join('');
 }
 
+// ============================================================
+// 대표 지시창 — CEO command console (AI_COMPANY_PRO.md §4)
+// ============================================================
+
+const BLOCKED_REASON = '계정 통계(인스타그램 인사이트 등)가 아직 연동되지 않아 지표 분석을 진행하지 못하고 있습니다. 대표님이 계정을 연동해주셔야 풀립니다.';
+
+const DEPT_ALIASES = {};
+for (const r of SIM.rooms) {
+  if (r.kind !== 'dept' && r.kind !== 'ceo') continue;
+  DEPT_ALIASES[r.code] = r.code;
+  DEPT_ALIASES[r.name.replace(/\s/g, '')] = r.code;
+}
+
+function animPhrase(anim) {
+  return { walk: '이동 중', type: '작업 중', talk: '대화 중', sit: '자리에서 대기 중' }[anim] || '대기 중';
+}
+
+function findEmployeeMention(text) {
+  return employees.find(e => text.includes(e.name));
+}
+function findDeptMention(text) {
+  const compact = text.replace(/\s/g, '');
+  for (const [alias, code] of Object.entries(DEPT_ALIASES)) {
+    if (compact.includes(alias)) return code;
+  }
+  return null;
+}
+
+function answerAsEmployee(emp) {
+  const teammates = employees.filter(e => e.dept === emp.dept && e !== emp);
+  const teamLine = teammates.length
+    ? teammates.map(t => `${t.name}(${STATUS_SHORT[t.status]}·${animPhrase(t.anim)})`).join(', ')
+    : '없음';
+  return { who: emp.name, role: `${emp.dept} · ${emp.role}`,
+    text: `저는 지금 ${animPhrase(emp.anim)}입니다 (${STATUS_SHORT[emp.status]}). 팀원 현황 — ${teamLine}` };
+}
+
+// "왜 늦어져?" — 진짜 병목 1개만 짚는다 (PRO doc §4 응답 규칙 그대로)
+function computeBottleneck() {
+  if (gatePendingStep) {
+    const names = gatePendingStep.waitingParticipants.join(', ');
+    return { who: '이서아', role: '비서실장',
+      text: `원인은 하나예요 — 대표님 결재 대기입니다. 회의실에서 ${names}이(가) 기다리고 있어요. 승인만 주시면 바로 다음 단계로 넘어갑니다.` };
+  }
+  if (scenarioRunning && currentStepIndex >= 0) {
+    const step = STEPS[currentStepIndex];
+    if (step.type === 'work') {
+      const depts = Array.isArray(step.dept) ? step.dept : [step.dept];
+      return { who: '이서아', role: '비서실장',
+        text: `${depts.join(', ')} 팀이 "${step.caption}" 작업 중입니다. 정상 진행이에요, 지연 아닙니다.` };
+    }
+    return { who: '이서아', role: '비서실장',
+      text: `${step.code} ${step.title} 진행 중입니다. 정상 진행이에요.` };
+  }
+  const blocked = employees.find(e => e.status === 'blocked');
+  if (blocked) {
+    return { who: '이서아', role: '비서실장',
+      text: `그 외 연동 대기 중인 ${blocked.dept}팀은 외부 연결 문제라 오늘 진행이 어려워요. ${BLOCKED_REASON}` };
+  }
+  return { who: '이서아', role: '비서실장', text: '지연 없습니다.' };
+}
+
+function statusReport() {
+  const clock = document.getElementById('clockTime').textContent;
+  const stepText = currentStepIndex >= 0 ? STEPS[currentStepIndex].code + ' ' + STEPS[currentStepIndex].title : '출근 전 (시나리오 미시작)';
+  const nextText = currentStepIndex >= 0 && currentStepIndex < STEPS.length - 1
+    ? STEPS[currentStepIndex + 1].code + ' ' + STEPS[currentStepIndex + 1].title
+    : (currentStepIndex === STEPS.length - 1 ? '없음 (오늘 업무 종료)' : STEPS[0].code + ' ' + STEPS[0].title);
+  return { who: '이서아', role: '비서실장',
+    text: `현재 시각 ${clock}, 현재 단계는 ${stepText}입니다. 다음 순서는 ${nextText}입니다.` };
+}
+
+function fullBriefing() {
+  const c = getCounts();
+  const approvalText = gatePendingStep ? `1건 — ${gatePendingStep.waitingParticipants.join(', ')} 대기` : '없음';
+  const blocked = employees.find(e => e.status === 'blocked');
+  const blockedText = blocked ? `${blocked.dept}팀 — ${BLOCKED_REASON}` : '없음';
+  const decideText = gatePendingStep ? 'TOP 3 승인 여부 (결재함 확인)' : '없음';
+  return { who: '이서아', role: '비서실장',
+    text: `① 오늘 완료 ${c.done}명 · ② 진행 중 ${c.working}명 · ③ 대표 승인 대기 ${approvalText} · ④ 막힌 것 ${blockedText} · ⑤ 오늘 대표가 결정할 것 — ${decideText}` };
+}
+
+function tryApprove() {
+  if (!gatePendingStep) return { who: '이서아', role: '비서실장', text: '지금은 승인 대기 중인 안건이 없습니다.' };
+  document.getElementById('btn-approve')?.click();
+  return { who: '이서아', role: '비서실장', text: '결재 처리했습니다.' };
+}
+
+async function adhocMeeting() {
+  if (scenarioRunning) {
+    return { who: '이서아', role: '비서실장', text: '지금은 하루 시나리오가 진행 중이라 별도 회의를 소집하기 어렵습니다. 시나리오가 끝난 뒤 다시 불러주세요.' };
+  }
+  const leads = Object.values(deptLeads);
+  const seats = assignMeetingSeats(leads.length);
+  await Promise.all(leads.map((e, i) => sendToAsync(e, seats[i].x, seats[i].y, 'sit')));
+  for (const e of leads) {
+    e.anim = 'talk';
+    await say(e, `${e.dept}: ${STATUS_SHORT[e.status]} 상태입니다.`, 1300 / speedMult);
+    clearSay(e);
+    e.anim = 'sit';
+  }
+  await Promise.all(leads.map(e => sendToAsync(e, e.deskX, e.deskY)));
+  leads.forEach(e => { e.anim = statusAnim(e.status); });
+  return { who: '이서아', role: '비서실장', text: '팀장 12명 회의 소집 완료 — 한 줄씩 보고 마치고 각자 자리로 복귀했습니다. (대화 로그 참고)' };
+}
+
+async function handleCommand(raw) {
+  const text = raw.trim();
+  if (!text) return;
+  logCommandUser(text);
+
+  let reply;
+  if (text.includes('왜') && (text.includes('늦') || text.includes('지연'))) {
+    reply = computeBottleneck();
+  } else if (text.includes('현황')) {
+    reply = statusReport();
+  } else if (text.includes('브리핑')) {
+    reply = fullBriefing();
+  } else if (text.includes('회의') && text.includes('소집')) {
+    reply = { who: '이서아', role: '비서실장', text: '회의 소집합니다 — 팀장 전원 회의실로 이동합니다.' };
+    logCommandReply(reply);
+    reply = await adhocMeeting();
+  } else if (text.includes('집중')) {
+    reply = { who: '이서아', role: '비서실장', text: '집중 모드로 전환했습니다 — 자율 행동 중단, 전원 자리 복귀 지시했습니다.' };
+  } else if (text.includes('승인')) {
+    reply = tryApprove();
+  } else {
+    const emp = findEmployeeMention(text);
+    const deptCode = !emp ? findDeptMention(text) : null;
+    if (emp) {
+      reply = answerAsEmployee(emp);
+    } else if (deptCode && deptLeads[deptCode]) {
+      reply = answerAsEmployee(deptLeads[deptCode]);
+    } else {
+      reply = { who: '이서아', role: '비서실장',
+        text: '무슨 말씀인지 정확히 못 알아들었어요. "현황 보고", "왜 늦어져?", "회의 소집", "지금 브리핑", "승인할게", 또는 부서명·이름을 입력해보세요.' };
+    }
+  }
+  logCommandReply(reply);
+}
+
+function logCommandUser(text) {
+  const empty = document.getElementById('cmdEmpty');
+  if (empty) empty.remove();
+  const log = document.getElementById('cmdLog');
+  const row = document.createElement('div');
+  row.className = 'cmdrow-user';
+  row.innerHTML = `<b>${text}</b>`;
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+}
+function logCommandReply(reply) {
+  const log = document.getElementById('cmdLog');
+  const row = document.createElement('div');
+  row.className = 'cmdrow-reply';
+  row.innerHTML = `<span class="who">${reply.who}</span> <span class="dept">${reply.role}</span><br>${reply.text}`;
+  log.appendChild(row);
+  log.scrollTop = log.scrollHeight;
+}
+
+document.getElementById('cmdSend').addEventListener('click', () => {
+  const input = document.getElementById('cmdInput');
+  handleCommand(input.value);
+  input.value = '';
+});
+document.getElementById('cmdInput').addEventListener('keydown', (ev) => {
+  if (ev.key === 'Enter') {
+    handleCommand(ev.target.value);
+    ev.target.value = '';
+  }
+});
+
 let scenarioRunning = false;
+let currentStepIndex = -1;
+let gatePendingStep = null;
+
 async function playScenario() {
   if (scenarioRunning) return;
   scenarioRunning = true;
   const done = new Set();
   for (let i = 0; i < STEPS.length; i++) {
     const step = STEPS[i];
+    currentStepIndex = i;
     renderStepList(i, done);
     renderDashboard(i);
     setCaption(step.code + ' ' + step.title + (step.caption ? ' — ' + step.caption : ''));
@@ -741,6 +957,7 @@ async function playScenario() {
   renderStepList(-1, done);
   setCaption('⑫ 비서실 브리핑까지 완료 — 오늘 업무 종료');
   scenarioRunning = false;
+  currentStepIndex = -1;
 }
 
 renderStepList(-1, new Set());
