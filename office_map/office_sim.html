@@ -102,11 +102,46 @@ input[type=range] { accent-color: var(--accent); }
 .litem { display: flex; align-items: center; gap: 6px; }
 .dot { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--ink); flex: none; }
 
+.stage-row { display: grid; grid-template-columns: 1fr 240px; gap: 16px; align-items: start; }
+@media (max-width: 880px) { .stage-row { grid-template-columns: 1fr; } }
+
 .plan-wrap {
   border: 1px solid var(--rule); background: var(--paper-2);
   padding: clamp(6px, 1.5vw, 16px); overflow: auto; position: relative;
 }
 canvas#stage { display: block; cursor: pointer; }
+
+.caption {
+  font-family: "Plex Mono", ui-monospace, monospace; font-size: 12.5px;
+  color: var(--ink); background: var(--paper-2); border-left: 3px solid var(--accent);
+  padding: 10px 14px; margin: 14px 0; min-height: 16px;
+}
+.caption b { color: var(--accent); }
+
+.steplist {
+  border: 1px solid var(--rule); background: var(--paper-2);
+  padding: 12px; font-family: "Plex Mono", ui-monospace, monospace; font-size: 11.5px;
+}
+.steplist .stitle { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--ink-dim); margin-bottom: 10px; }
+.stepitem { display: flex; gap: 8px; padding: 5px 4px; border-radius: 2px; color: var(--ink-dim); align-items: flex-start; line-height: 1.4; }
+.stepitem .code { flex: none; width: 18px; color: var(--ink-dim); }
+.stepitem.done { color: var(--ink-dim); }
+.stepitem.done .code { color: var(--st-done); }
+.stepitem.current { color: var(--ink); background: var(--accent-soft, rgba(172,58,42,0.12)); font-weight: 700; }
+.stepitem.current .code { color: var(--accent); }
+.stepitem.gate.current { color: var(--accent); }
+
+#gatebox {
+  display: none; margin-top: 10px; padding: 12px; border: 1.5px dashed var(--accent);
+  font-family: "Plex Mono", monospace; font-size: 12px; color: var(--ink);
+}
+#gatebox b { color: var(--accent); display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+#btn-approve {
+  width: 100%; background: var(--accent); color: var(--paper); border: none;
+  font-family: "Plex Mono", monospace; font-weight: 700; font-size: 12.5px;
+  padding: 10px; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase;
+}
+#btn-approve:hover { opacity: 0.88; }
 
 #tooltip {
   position: absolute; pointer-events: none; z-index: 5;
@@ -137,15 +172,15 @@ footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--rule);
   </div>
 
   <div class="toolbar">
-    <button class="act" id="btn-commute">출근 애니메이션</button>
-    <button class="act" id="btn-meeting">회의 소집</button>
-    <button class="act" id="btn-return">복귀 (결재 완료)</button>
+    <button class="act" id="btn-scenario">▶ 하루 시나리오 시작</button>
     <button class="act" id="btn-play">일시정지</button>
     <div class="speedwrap">
       <span>SPEED</span>
       <input type="range" id="speed" min="1" max="4" step="1" value="2">
     </div>
   </div>
+
+  <div class="caption" id="caption">시나리오를 시작하면 사규 §3의 하루 12단계가 순서대로 진행됩니다.</div>
 
   <div class="legend-row">
     <div class="legend-group">
@@ -160,14 +195,25 @@ footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--rule);
       <span class="glabel">애니메이션</span>
       <div class="litem">걷기 — 이동 중 흔들림</div>
       <div class="litem">타이핑 — 손 움직임 + 커서</div>
-      <div class="litem">대화 — 말풍선 펄스</div>
+      <div class="litem">대화 — 말풍선 대사</div>
       <div class="litem">앉기 — 느린 호흡</div>
     </div>
   </div>
 
-  <div class="plan-wrap">
-    <canvas id="stage"></canvas>
-    <div id="tooltip"></div>
+  <div class="stage-row">
+    <div class="plan-wrap">
+      <canvas id="stage"></canvas>
+      <div id="tooltip"></div>
+    </div>
+    <div class="steplist">
+      <div class="stitle">하루 12단계</div>
+      <div id="steps"></div>
+      <div id="gatebox">
+        <b>★ 대표 승인 대기</b>
+        아래 버튼을 누르기 전까지 ⑧번으로 진행하지 않습니다.
+        <button id="btn-approve" style="margin-top:10px;">승인할게</button>
+      </div>
+    </div>
   </div>
 
   <footer>scene.mag AI COMPANY — office simulation v1 · 클릭: 직원 정보 · 다른 직원이 서 있는 칸은 A*가 우회 경로를 계산합니다</footer>
@@ -282,36 +328,6 @@ function staggeredRelease(items, gapMs, fn) {
   next();
 }
 
-document.getElementById('btn-commute').addEventListener('click', () => {
-  const entrance = SIM.rooms.find(r=>r.kind==='entrance');
-  const spots = [];
-  for (let yy=entrance.iy; yy<entrance.iy+entrance.ih; yy++)
-    for (let xx=entrance.ix; xx<entrance.ix+entrance.iw; xx++)
-      if (isWalkable(xx,yy)) spots.push({x:xx,y:yy});
-  employees.forEach(e => { e.path = []; e.goal = null; e.onArrive = null; e.anim = 'sit'; });
-  staggeredRelease(employees, 240, (e, i) => {
-    const s = spots[i % spots.length];
-    e.x = e.px = s.x; e.y = e.py = s.y;
-    sendTo(e, e.deskX, e.deskY, () => { e.anim = statusAnim(e.status); });
-  });
-});
-
-document.getElementById('btn-meeting').addEventListener('click', () => {
-  const leads = Object.values(deptLeads);
-  staggeredRelease(leads, 200, (e, i) => {
-    const spot = SIM.meetingSpots[i % SIM.meetingSpots.length];
-    sendTo(e, spot.x, spot.y, () => { e.anim = 'talk'; });
-  });
-});
-
-document.getElementById('btn-return').addEventListener('click', () => {
-  const leads = Object.values(deptLeads);
-  leads.forEach(e => {
-    if (e.status === 'approval') e.status = 'working';
-    sendTo(e, e.deskX, e.deskY, () => { e.anim = statusAnim(e.status); });
-  });
-});
-
 let playing = true;
 document.getElementById('btn-play').addEventListener('click', (ev) => {
   playing = !playing;
@@ -320,6 +336,240 @@ document.getElementById('btn-play').addEventListener('click', (ev) => {
 
 let speedMult = 2;
 document.getElementById('speed').addEventListener('input', (ev) => { speedMult = Number(ev.target.value); });
+
+// A pause-aware wait: counts real elapsed time only while `playing` is true,
+// so hitting 일시정지 freezes dialogue/caption timing exactly like it freezes walking.
+function sleep(ms) {
+  return new Promise(resolve => {
+    let waited = 0, last = performance.now();
+    function poll(now) {
+      if (playing) waited += (now - last);
+      last = now;
+      if (waited >= ms) resolve(); else requestAnimationFrame(poll);
+    }
+    requestAnimationFrame(poll);
+  });
+}
+
+function sendToAsync(e, gx, gy, anim) {
+  return new Promise(resolve => {
+    sendTo(e, gx, gy, () => { if (anim) e.anim = anim; resolve(); });
+  });
+}
+
+function byName(name) { return employees.find(e => e.name === name); }
+
+// ---------- room highlight (spotlight for the step currently running) ----------
+let activeHighlight = [];
+function highlightDept(codes) { activeHighlight = Array.isArray(codes) ? codes : [codes]; }
+function clearHighlight() { activeHighlight = []; }
+
+// ---------- speech bubbles with real dialogue text ----------
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split('');
+  let lines = [], cur = '';
+  for (const ch of words) {
+    const test = cur + ch;
+    if (ctx.measureText(test).width > maxWidth && cur) { lines.push(cur); cur = ch; }
+    else cur = test;
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+function say(e, text, ms) {
+  e.speech = text;
+  return sleep(ms || Math.min(4200, 1100 + text.length * 90));
+}
+function clearSay(e) { e.speech = null; }
+
+// ---------- meeting choreography: walk in facing pairs, speak in turn, walk back ----------
+function assignMeetingSeats(n) {
+  const spots = SIM.meetingSpots; // [0..5]=top side, [6..11]=bottom side, same index pairs face each other across the table
+  const seats = [];
+  const half = Math.ceil(n / 2);
+  for (let i = 0; i < n; i++) {
+    seats.push(i < half ? spots[i] : spots[6 + (i - half)]);
+  }
+  return seats;
+}
+
+async function runMeeting(names, lines) {
+  const people = names.map(byName).filter(Boolean);
+  const seats = assignMeetingSeats(people.length);
+  await Promise.all(people.map((e, i) => sendToAsync(e, seats[i].x, seats[i].y, 'sit')));
+  for (const [speakerName, text] of lines) {
+    const speaker = byName(speakerName);
+    if (!speaker) continue;
+    speaker.anim = 'talk';
+    await say(speaker, text);
+    clearSay(speaker);
+    speaker.anim = 'sit';
+  }
+  await Promise.all(people.map(e => sendToAsync(e, e.deskX, e.deskY)));
+  people.forEach(e => { e.anim = statusAnim(e.status); });
+}
+
+// ---------- ⑦ approval gate: staff physically wait in the meeting room until the CEO clicks 승인할게 ----------
+function runGate(step) {
+  return new Promise(async (resolve) => {
+    const people = step.waitingParticipants.map(byName).filter(Boolean);
+    const seats = assignMeetingSeats(people.length);
+    await Promise.all(people.map((e, i) => sendToAsync(e, seats[i].x, seats[i].y, 'sit')));
+    for (const [speakerName, text] of (step.lines || [])) {
+      const speaker = byName(speakerName);
+      if (!speaker) continue;
+      speaker.anim = 'talk';
+      await say(speaker, text);
+      clearSay(speaker);
+    }
+    people.forEach(e => { e.anim = 'sit'; });
+    highlightDept(people.map(e => e.dept));
+
+    const gatebox = document.getElementById('gatebox');
+    const approveBtn = document.getElementById('btn-approve');
+    gatebox.style.display = 'block';
+    const onApprove = async () => {
+      approveBtn.removeEventListener('click', onApprove);
+      gatebox.style.display = 'none';
+      clearHighlight();
+      for (const name of step.approvedDept || []) {
+        const emp = byName(name);
+        if (emp && emp.status === 'approval') emp.status = 'working';
+      }
+      await Promise.all(people.map(e => sendToAsync(e, e.deskX, e.deskY)));
+      people.forEach(e => { e.anim = statusAnim(e.status); });
+      resolve();
+    };
+    approveBtn.addEventListener('click', onApprove);
+  });
+}
+
+async function runWork(step) {
+  const depts = Array.isArray(step.dept) ? step.dept : [step.dept];
+  highlightDept(depts);
+  setCaption(step.caption);
+  await sleep(2400 / speedMult);
+  clearHighlight();
+}
+
+async function runBrief(step) {
+  const speaker = byName(step.speaker);
+  const target = SIM.rooms.find(r => r.code === step.target);
+  const spot = { x: target.ix + 1, y: target.iy + 2 };
+  await sendToAsync(speaker, spot.x, spot.y, 'sit');
+  for (const [speakerName, text] of step.lines) {
+    speaker.anim = 'talk';
+    await say(speaker, text);
+    clearSay(speaker);
+  }
+  speaker.anim = 'sit';
+  await sendToAsync(speaker, speaker.deskX, speaker.deskY);
+  speaker.anim = statusAnim(speaker.status);
+}
+
+async function runCommute() {
+  const entrance = SIM.rooms.find(r => r.kind === 'entrance');
+  const spots = [];
+  for (let yy = entrance.iy; yy < entrance.iy + entrance.ih; yy++)
+    for (let xx = entrance.ix; xx < entrance.ix + entrance.iw; xx++)
+      if (isWalkable(xx, yy)) spots.push({ x: xx, y: yy });
+  employees.forEach(e => { e.path = []; e.goal = null; e.onArrive = null; e.anim = 'sit'; });
+  await new Promise(resolve => {
+    let remaining = employees.length;
+    staggeredRelease(employees, 200 / speedMult, (e, i) => {
+      const s = spots[i % spots.length];
+      e.x = e.px = s.x; e.y = e.py = s.y;
+      sendTo(e, e.deskX, e.deskY, () => {
+        e.anim = statusAnim(e.status);
+        remaining--;
+        if (remaining <= 0) resolve();
+      });
+    });
+  });
+}
+
+// ---------- the 12-step daily scenario, straight from AI_COMPANY_PRO.md §3 ----------
+const STEPS = [
+  { code:'①', title:'전원 출근', type:'commute' },
+  { code:'②', title:'시장조사 완료 → 기획1팀 인수인계 회의', type:'meeting',
+    participants:['한지원','강태오'],
+    lines:[
+      ['한지원','출처 세 개 다 채웠어요. 오늘 소재 5건, 뱅크시 전시 포함해서 넘길게요.'],
+      ['강태오','좋네요, 바로 아이디어에 붙일게요.'],
+      ['한지원','최근 7일 내 다룬 소재는 뺐어요.'],
+      ['강태오','확인했습니다. 오늘 15개 뽑아볼게요.'],
+    ] },
+  { code:'③', title:'브랜드 분석 — 연동 대기 기록', type:'work', dept:'BRD-02',
+    caption:'계정 데이터 미연동 — 추정치를 만들지 않고 "연동 대기"로 기록합니다.' },
+  { code:'④', title:'아이디어 15개 생산', type:'work', dept:'PLN-03',
+    caption:'아이디어 15개 생산 중 → 점수 매겨 TOP 3 선별 예정' },
+  { code:'⑤', title:'검수 — 반려 사유 기록', type:'work', dept:'QA-04',
+    caption:'금칙어·근거 링크·추상적 마무리 여부 전수 검사 중' },
+  { code:'⑥', title:'TOP 3 선정', type:'work', dept:'QA-04',
+    caption:'TOP 3 확정 — 대표 승인 대기로 전환' },
+  { code:'⑦', title:'★ 대표 승인 대기 ★', type:'gate',
+    waitingParticipants:['강태오','노현식'],
+    approvedDept:['유단비','조은결','백서윤'],
+    lines:[
+      ['강태오','TOP 3 넘겼습니다. 승인 기다릴게요.'],
+      ['노현식','반려 사유는 없었어요, 전부 통과했습니다.'],
+    ] },
+  { code:'⑧', title:'대본 작성 → 제작팀 전달', type:'meeting',
+    participants:['유단비','최도현','표준영'],
+    lines:[
+      ['유단비','원고 나왔어요. 캐러셀 7장 기준으로 넘길게요.'],
+      ['최도현','원본은 복제본에만 작업할게요.'],
+      ['표준영','장수는 내용에 맞춰 갈게요, 고정 안 해요.'],
+    ] },
+  { code:'⑨', title:'제작 (영상·이미지 동시)', type:'work', dept:['VID-06','IMG-07'],
+    caption:'영상 편집·자막·썸네일 + 캐러셀 이미지 동시 제작 중' },
+  { code:'⑩', title:'결과물 저장', type:'work', dept:'OPS-11',
+    caption:'저장 완료 — 실패 없음, 연결 안 된 서비스는 없습니다' },
+  { code:'⑪', title:'성과 기록', type:'work', dept:'RVW-10',
+    caption:'저장·댓글·도달·공유 지표 기록 중' },
+  { code:'⑫', title:'비서실 브리핑 → 대표 최종 보고', type:'brief',
+    speaker:'이서아', target:'CEO-14',
+    lines:[
+      ['이서아','대표님, 지금 브리핑 드릴게요.'],
+      ['이서아','오늘 완료 1건, 승인 1건, 막힌 건 없습니다.'],
+    ] },
+];
+
+function setCaption(text) { document.getElementById('caption').textContent = text; }
+
+function renderStepList(currentIdx, doneSet) {
+  const el = document.getElementById('steps');
+  el.innerHTML = STEPS.map((s, i) => {
+    const cls = i === currentIdx ? 'current' : (doneSet.has(i) ? 'done' : '');
+    const gateCls = s.type === 'gate' ? ' gate' : '';
+    return `<div class="stepitem ${cls}${gateCls}"><span class="code">${s.code}</span><span>${s.title}</span></div>`;
+  }).join('');
+}
+
+let scenarioRunning = false;
+async function playScenario() {
+  if (scenarioRunning) return;
+  scenarioRunning = true;
+  const done = new Set();
+  for (let i = 0; i < STEPS.length; i++) {
+    const step = STEPS[i];
+    renderStepList(i, done);
+    setCaption(step.code + ' ' + step.title + (step.caption ? ' — ' + step.caption : ''));
+    if (step.type === 'commute') await runCommute();
+    else if (step.type === 'meeting') await runMeeting(step.participants, step.lines);
+    else if (step.type === 'work') await runWork(step);
+    else if (step.type === 'gate') await runGate(step);
+    else if (step.type === 'brief') await runBrief(step);
+    done.add(i);
+  }
+  renderStepList(-1, done);
+  setCaption('⑫ 비서실 브리핑까지 완료 — 오늘 업무 종료');
+  scenarioRunning = false;
+}
+
+renderStepList(-1, new Set());
+document.getElementById('btn-scenario').addEventListener('click', playScenario);
 
 // ---------- rendering ----------
 const canvas = document.getElementById('stage');
@@ -425,10 +675,27 @@ function draw(now) {
   ctx.drawImage(bgCanvas, 0, 0);
   const ink = cvar('--ink');
   const paperC = cvar('--paper');
+  const accentC = cvar('--accent');
   const colorCache = {
     done: cvar('--st-done'), working: cvar('--st-working'), approval: cvar('--st-approval'),
     blocked: cvar('--st-blocked'), waiting: cvar('--st-waiting'),
   };
+
+  // spotlight the room(s) tied to the currently running scenario step
+  if (activeHighlight.length) {
+    const pulse = 0.6 + Math.sin(now/1000*3)*0.4;
+    ctx.save();
+    ctx.strokeStyle = accentC;
+    ctx.lineWidth = 2.5;
+    ctx.globalAlpha = 0.5 + pulse*0.5;
+    for (const code of activeHighlight) {
+      const r = SIM.rooms.find(rm => rm.code === code);
+      if (!r) continue;
+      ctx.strokeRect(r.x*TILE+2, r.y*TILE+2, r.w*TILE-4, r.h*TILE-4);
+    }
+    ctx.restore();
+  }
+
   for (const e of employees) {
     const px = (e.x+0.5)*TILE, py = (e.y+0.5)*TILE;
     const t = now/1000;
@@ -470,7 +737,8 @@ function draw(now) {
       ctx.fillStyle = ink;
       ctx.fillRect(px-4, cy+3+Math.max(0,jt)*1.2, 2.6, 2);
       ctx.fillRect(px+1.4, cy+3+Math.max(0,-jt)*1.2, 2.6, 2);
-    } else if (e.anim === 'talk') {
+    } else if (e.anim === 'talk' && !e.speech) {
+      // ambient "still in approval-wait" chat indicator — no scripted line active
       const p = (Math.sin(t*3)+1)/2;
       const bw = 13, bh = 9, bx = px+6, by = cy-14-p*2;
       ctx.globalAlpha = 0.55+p*0.45;
@@ -493,6 +761,40 @@ function draw(now) {
       }
       ctx.globalAlpha = 1;
     }
+    ctx.restore();
+  }
+
+  // second pass: full dialogue bubbles on top of everything, so they're never
+  // occluded by a neighboring employee's circle or another room's wall.
+  ctx.font = '600 10.5px "Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif';
+  for (const e of employees) {
+    if (!e.speech) continue;
+    const px = (e.x+0.5)*TILE, py = (e.y+0.5)*TILE - 9;
+    const pad = 7, lineH = 13, maxW = 128;
+    const lines = wrapText(ctx, e.speech, maxW);
+    const bw = Math.max(...lines.map(l => ctx.measureText(l).width)) + pad*2;
+    const bh = lines.length*lineH + pad*2 - 3;
+    const bx = px - bw/2, by = py - bh - 10;
+    ctx.save();
+    ctx.fillStyle = paperC;
+    ctx.strokeStyle = accentC;
+    ctx.lineWidth = 1.4;
+    roundRect(ctx, bx, by, bw, bh, 6);
+    ctx.fill(); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px-5, by+bh);
+    ctx.lineTo(px, by+bh+7);
+    ctx.lineTo(px+5, by+bh);
+    ctx.closePath();
+    ctx.fillStyle = paperC;
+    ctx.fill();
+    ctx.strokeStyle = accentC;
+    ctx.stroke();
+    ctx.fillStyle = ink;
+    ctx.textAlign = 'center';
+    lines.forEach((line, i) => {
+      ctx.fillText(line, px, by+pad+ (i+1)*lineH - 3);
+    });
     ctx.restore();
   }
 }
