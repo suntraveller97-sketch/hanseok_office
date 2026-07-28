@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<rect width="1080" height="1350" fill="#F6F2EC"/>
+<rect x="76" y="58" width="142" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
+<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">TIP</text>
+<text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">예매</text>
+<text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">팁</text>
+<rect x="76" y="366.8" width="64" height="5" rx="2.5" fill="#B5482A"/>
+<circle cx="86" cy="413.8" r="4" fill="#B5482A"/>
+<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">국내 예매 7.9(목) 오전 10시 오픈</text>
+<circle cx="86" cy="466.3" r="4" fill="#B5482A"/>
+<text x="106" y="475.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">오픈 직후 일부 IMAX관 접속 폭주·매진</text>
+<circle cx="86" cy="518.8" r="4" fill="#B5482A"/>
+<text x="106" y="527.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">정확한 상영시간표는 미확인 (개봉 후 업데이트)</text>
+<rect x="76" y="1140" width="928" height="152" fill="#EDE6D9"/>
+<rect x="76" y="1140" width="6" height="152" fill="#B5482A"/>
+<text x="112" y="1186.0" font-size="30" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 개봉 9일 전, IMAX 좌석은 지금도 빠르게</text>
+<text x="112" y="1231.0" font-size="30" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">소진 중</text>
+<text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">4 / 5</text>
+</svg>
