@@ -2,6 +2,7 @@
 
 파이프라인: 시장조사팀 → 기획 1팀 → 검수팀 → 대표 승인 → 기획 2팀 → 이미지 제작팀
 Notion: https://app.notion.com/p/3ac3fbe4e44981e5be3ae32ad07f4b53
+Canva (편집 가능): https://www.canva.com/d/YQzQbKDnoyVzPga
 
 ## 카드뉴스 (5장)
 
