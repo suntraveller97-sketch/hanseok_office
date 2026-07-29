@@ -3,6 +3,7 @@
 파이프라인: 시장조사팀 → 기획 1팀 → 검수팀 → 대표 승인 → 기획 2팀 → 이미지 제작팀
 카테고리: 영화 (신규 확장 카테고리 첫 사례)
 Notion: https://app.notion.com/p/3ab3fbe4e44981a2bdd2db5ea8fb54b2
+Canva (편집 가능): https://www.canva.com/d/8ViREMvJQXlUmDh
 
 ## 카드뉴스 (5장)
 
