@@ -1,18 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<rect x="76" y="58" width="246" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
-<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">WHY NOW</text>
-<text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">가야 하는</text>
-<text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">이유 2가지</text>
-<rect x="76" y="366.8" width="64" height="5" rx="2.5" fill="#B5482A"/>
-<circle cx="86" cy="413.8" r="4" fill="#B5482A"/>
-<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">서울시립미술관이 매년 선정하는 조각가 개인전,</text>
-<text x="106" y="463.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">2026년 주인공</text>
-<circle cx="86" cy="506.8" r="4" fill="#B5482A"/>
-<text x="106" y="515.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">한국 미술사 맥락에서 형성된 작품 세계가 국제</text>
-<text x="106" y="556.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">무대로 확장·연결되는 과정을 확인</text>
+<rect x="76" y="58" width="324" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
+<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">EXHIBITION</text>
+<text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">조숙진:</text>
+<text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">지나가는 자리</text>
+<text x="76" y="377.6" font-size="30" font-weight="600" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#3A362F">남서울미술관 2층·야외정원 (관악구)</text>
+<text x="76" y="421.6" font-size="26" font-weight="500" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#8A8375">2026.7.29 – 11.15</text>
+<rect x="76" y="481.6" width="64" height="5" rx="2.5" fill="#B5482A"/>
+<circle cx="86" cy="528.6" r="4" fill="#B5482A"/>
+<text x="106" y="537.6" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">서울시립미술관 '한국 대표 조각가'</text>
+<text x="106" y="578.1" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">시리즈 두 번째, 20년 만의 개인전</text>
+<circle cx="86" cy="621.6" r="4" fill="#B5482A"/>
+<text x="106" y="630.6" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">합판 작업부터 뉴욕 설치, 중남미 건축까지</text>
+<text x="106" y="671.1" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">100여 점으로 만나는 조형 세계 총망라</text>
 <rect x="76" y="1140" width="928" height="104" fill="#EDE6D9"/>
 <rect x="76" y="1140" width="6" height="104" fill="#B5482A"/>
-<text x="112" y="1186.0" font-size="30" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 등단 이후 처음 만나는 회고전급 구성</text>
-<text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">3 / 5</text>
+<text x="112" y="1186.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 조숙진 조형 세계를 총망라한 최대 규모 개인전</text>
+<text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">3 / 6</text>
 </svg>
