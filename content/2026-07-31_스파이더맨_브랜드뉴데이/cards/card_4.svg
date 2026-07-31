@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<rect x="76" y="58" width="142" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
-<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">TIP</text>
-<text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">관람</text>
-<text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">정보</text>
+<rect x="76" y="58" width="168" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
+<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">CAST</text>
+<text x="76" y="224.0" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">몰랐던</text>
+<text x="76" y="300.8" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">비하인드 2가지</text>
 <rect x="76" y="366.8" width="64" height="5" rx="2.5" fill="#B5482A"/>
 <circle cx="86" cy="413.8" r="4" fill="#B5482A"/>
-<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">러닝타임 145분 (2시간 25분)</text>
-<circle cx="86" cy="466.3" r="4" fill="#B5482A"/>
-<text x="106" y="475.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">관람등급: 12세이상관람가</text>
-<circle cx="86" cy="518.8" r="4" fill="#B5482A"/>
-<text x="106" y="527.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">CGV·롯데시네마 등 전국 멀티플렉스 상영</text>
+<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">마크 러팔로가 헐크로 깜짝 출연,</text>
+<text x="106" y="463.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">MCU 히어로들과의 연결고리 예고</text>
+<circle cx="86" cy="506.8" r="4" fill="#B5482A"/>
+<text x="106" y="515.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">'홈커밍'(2017) 떡밥이었던 스콜피온이</text>
+<text x="106" y="556.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">마이클 맨도로 8년 만에 정식 등장</text>
 <rect x="76" y="1140" width="928" height="104" fill="#EDE6D9"/>
 <rect x="76" y="1140" width="6" height="104" fill="#B5482A"/>
-<text x="112" y="1186.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 쿠키 영상 보려면 엔딩크레딧까지 자리 지키기</text>
+<text x="112" y="1186.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 곳곳에 숨은 MCU 크로스오버 떡밥</text>
 <text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">4 / 5</text>
 </svg>
