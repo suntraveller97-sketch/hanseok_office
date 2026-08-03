@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<rect x="76" y="58" width="246" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
-<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">WHY NOW</text>
+<text x="76" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#1C1B19">WHY NOW</text>
 <text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">가야 하는</text>
 <text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">이유 2가지</text>
-<rect x="76" y="366.8" width="64" height="5" rx="2.5" fill="#B5482A"/>
-<circle cx="86" cy="413.8" r="4" fill="#B5482A"/>
+<circle cx="86" cy="413.8" r="4" fill="#1C1B19"/>
 <text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">미국 수어(ASL)의 움직임과 고전 만화 모션</text>
 <text x="106" y="463.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">라인을 결합한 신작 드로잉 애니메이션</text>
-<circle cx="86" cy="506.8" r="4" fill="#B5482A"/>
+<circle cx="86" cy="506.8" r="4" fill="#1C1B19"/>
 <text x="106" y="515.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">소통과 권력의 구조를 질문해온 작가의</text>
 <text x="106" y="556.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">대표작 '완고한 바위, 무모한 싸움들'</text>
-<rect x="76" y="1140" width="928" height="104" fill="#EDE6D9"/>
-<rect x="76" y="1140" width="6" height="104" fill="#B5482A"/>
-<text x="112" y="1186.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 청각 언어가 시각 예술이 되는 순간</text>
+<rect x="76" y="1140" width="928" height="104" fill="#FFFFFF"/>
+<text x="76" y="1198.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 청각 언어가 시각 예술이 되는 순간</text>
 <text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">3 / 5</text>
 </svg>

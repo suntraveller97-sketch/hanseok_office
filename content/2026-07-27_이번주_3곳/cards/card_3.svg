@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<rect x="76" y="58" width="220" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
-<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">POP-UP</text>
+<text x="76" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#1C1B19">POP-UP</text>
 <text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">GUCCI</text>
 <text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">팝업스토어</text>
 <text x="76" y="346.8" font-size="30" font-weight="600" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#3A362F">신세계백화점 강남점</text>
 <text x="76" y="390.8" font-size="26" font-weight="500" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#8A8375">2026.7.30 – 8.9</text>
-<rect x="76" y="450.8" width="64" height="5" rx="2.5" fill="#B5482A"/>
-<circle cx="86" cy="497.8" r="4" fill="#B5482A"/>
+<circle cx="86" cy="497.8" r="4" fill="#1C1B19"/>
 <text x="106" y="506.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">구찌 단독 팝업, 오픈 임박</text>
-<circle cx="86" cy="550.3" r="4" fill="#B5482A"/>
+<circle cx="86" cy="550.3" r="4" fill="#1C1B19"/>
 <text x="106" y="559.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">전시 구성·한정 상품 상세는 미확인 (오픈 후 업데이트)</text>
-<rect x="76" y="1140" width="928" height="104" fill="#EDE6D9"/>
-<rect x="76" y="1140" width="6" height="104" fill="#B5482A"/>
-<text x="112" y="1186.0" font-size="30" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 오픈런 예상, 오픈 당일 오전 방문 추천</text>
+<rect x="76" y="1140" width="928" height="104" fill="#FFFFFF"/>
+<text x="76" y="1198.0" font-size="30" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 오픈런 예상, 오픈 당일 오전 방문 추천</text>
 <text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">3 / 6</text>
 </svg>
