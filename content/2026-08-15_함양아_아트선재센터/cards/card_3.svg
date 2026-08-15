@@ -1,15 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<text x="76" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#1C1B19">WHY WATCH</text>
-<text x="76" y="224.0" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">지금 가야</text>
-<text x="76" y="300.8" font-size="60" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">하는 이유 2가지</text>
-<circle cx="86" cy="413.8" r="4" fill="#1C1B19"/>
-<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">거대한 원형 구조물 속,</text>
-<text x="106" y="463.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">8채널 비디오로 펼쳐지는 세계</text>
-<circle cx="86" cy="506.8" r="4" fill="#1C1B19"/>
-<text x="106" y="515.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">수장과 장례에서 탄생, 일상까지</text>
-<text x="106" y="556.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">이어지는 7개 장의 서사</text>
-<rect x="76" y="1140" width="928" height="104" fill="#FFFFFF"/>
-<text x="76" y="1198.0" font-size="27" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 보는 게 아니라 들어가서 경험하는 전시</text>
+<text x="76" y="520.0" font-size="26" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#3A362F">정의되지 않은 파노라마 4.0</text>
+<text x="76" y="587.0" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">거대한 원형 구조물 속</text>
+<text x="76" y="670.6" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">8채널로 펼쳐지는 세계</text>
 <text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">3 / 5</text>
 </svg>
