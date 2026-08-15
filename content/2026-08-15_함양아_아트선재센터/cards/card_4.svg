@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+<rect width="1080" height="1350" fill="#F6F2EC"/>
+<text x="76" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#1C1B19">TIP</text>
+<text x="76" y="224.0" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">이용</text>
+<text x="76" y="300.8" font-size="58" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">정보</text>
+<circle cx="86" cy="413.8" r="4" fill="#1C1B19"/>
+<text x="106" y="422.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">관람시간 화-일 12:00-19:00</text>
+<text x="106" y="463.3" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">(입장마감 18:30)</text>
+<circle cx="86" cy="506.8" r="4" fill="#1C1B19"/>
+<text x="106" y="515.8" font-size="27" font-weight="400" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">월요일 휴관</text>
+<rect x="76" y="1140" width="928" height="104" fill="#FFFFFF"/>
+<text x="76" y="1198.0" font-size="27" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">한 줄 요약: 안국역 3호선 1번 출구 도보 7분</text>
+<text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">4 / 5</text>
+</svg>
