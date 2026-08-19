@@ -34,7 +34,6 @@
 | 서울시립미술관 서소문본관 — 유영국: 산은 내 안에 있다 | 전시 | 서소문본관 1층 전시실 | 화-금 10-20시 / 토·일·공휴일 10-19시 | 무료 | 후보 | [SeMA](https://sema.seoul.go.kr/kr/whatson/exhibition/detail?exNo=1529410) | 5.19-10.25, 탄생 110주년 회고전 |
 | 에디션덴마크 녹사평 | 공간(카페+쇼룸) | 용산구 이태원동 637 (녹사평대로 244) | 화-일 10-19시, 월 휴무 | - | 후보 | [메종코리아](https://www.maisonkorea.com/art_design/2026/03/fritz-hansen-of-noksapyeong/), [마리끌레르](https://www.marieclairekorea.com/culture/lifestyle/2026/04/new-cafe-3/) | 프리츠한센 쇼룸 1층 카페 |
 | 윤숲 후르츠산도점 | 공간(카페) | 광진구 면목로7길 8, 1층 | 11:00-22:00, 화요일 휴무 | - | 후보 | [마리끌레르](https://www.marieclairekorea.com/culture/lifestyle/2026/07/hottest-cafe/) | 제철 과일 후르츠산도 시그니처 |
-| 문화역서울284 (구 서울역) | 공간(헤리티지) | 중구 청파로 378 | 화-일 10-18시(수 19시까지), 월 휴관 | 무료(투어 사전예약) | 후보 | [서울시 문화포털](https://culture.seoul.go.kr/culture/culture/cultureEvent/view.do?menuNo=200009&cultcode=149650) | 1925년 준공, 8.1-8.16 무료 공간투어 |
 | 박세진 개인전 《STARRY NIGHT》 | 전시 | 종로구 우정국로, 운림갤러리 | - | - | 후보(근거 보강 필요) | [artworldnews](https://www.artworldnews.co.kr/news/articleView.html?idxno=5572) | 8.6-8.28, 단일 출처만 확인됨 |
 
 ## 대전
@@ -56,3 +55,4 @@
 | 무애서유 (대전) | 출처를 찾지 못해 대표 지시로 제외 |
 | 하츠네 미쿠 팝업 (AK플라자 홍대) | 애니메이션 장르 상시 제외 규칙 적용 (2026.08.11) |
 | 명탐정 코난: 하이웨이의 타천사 | 애니메이션 장르 상시 제외 규칙 적용 (2026.08.11) |
+| 문화역서울284 무료 공간투어 | 이벤트 기간(8.1-8.16) 종료로 시의성 소멸 |
