@@ -2,7 +2,7 @@
 
 파이프라인: 시장조사팀 → 기획 2팀(캡션) → 이미지 제작팀(표지만) → 대표 확인
 
-Notion: (작성 예정)
+Notion: https://app.notion.com/p/3c83fbe4e4498167a4d2cd57fc41786d
 Canva (표지 전용, 편집 가능): https://www.canva.com/d/3G5-hJwrv8bsSsi
 
 ## 콘텐츠 개요
