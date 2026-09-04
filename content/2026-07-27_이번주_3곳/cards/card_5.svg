@@ -1,18 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
 <rect width="1080" height="1350" fill="#F6F2EC"/>
-<rect x="76" y="58" width="180" height="52" rx="26" fill="none" stroke="#B5482A" stroke-width="2.5"/>
-<text x="108" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#B5482A">GUIDE</text>
+<text x="76" y="93.0" font-size="24" font-weight="700" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#1C1B19">GUIDE</text>
 <text x="76" y="186.0" font-size="52" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">동선 정리 📍</text>
-<rect x="76" y="256" width="64" height="5" rx="2.5" fill="#B5482A"/>
 <rect x="76.0" y="316" width="444.0" height="130" fill="#EDE6D9"/>
-<text x="106.0" y="368.0" font-size="28" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#B5482A">여의도 · 더현대 서울</text>
+<text x="106.0" y="368.0" font-size="28" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">여의도 · 더현대 서울</text>
 <text x="106.0" y="408.0" font-size="26" font-weight="500" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">BANKSY: Still Here</text>
 <rect x="560.0" y="316" width="444.0" height="170" fill="#EDE6D9"/>
-<text x="590.0" y="368.0" font-size="28" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#B5482A">강남 · 신세계백화점</text>
+<text x="590.0" y="368.0" font-size="28" font-weight="800" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">강남 · 신세계백화점</text>
 <text x="590.0" y="408.0" font-size="26" font-weight="500" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">GUCCI 팝업스토어</text>
 <text x="590.0" y="448.0" font-size="26" font-weight="500" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#2A2823">TWL × 오유글라스</text>
-<rect x="76" y="1170" width="928" height="101" fill="#EDE6D9"/>
-<rect x="76" y="1170" width="6" height="101" fill="#B5482A"/>
-<text x="112" y="1214.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">두 지역만 오가면 하루에 3곳 전부 가능</text>
+<rect x="76" y="1170" width="928" height="101" fill="#FFFFFF"/>
+<text x="76" y="1226.0" font-size="28" font-weight="700" font-family="'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif" fill="#1C1B19">두 지역만 오가면 하루에 3곳 전부 가능</text>
 <text text-anchor="end" x="1004" y="1294.0" font-size="22" font-weight="500" font-family="'Plex Mono','SFMono-Regular',monospace" fill="#8A8375">5 / 6</text>
 </svg>
