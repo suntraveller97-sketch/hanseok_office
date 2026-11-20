@@ -1,19 +1,20 @@
-"""popup_scout.py 테스트: python3 -m unittest test_popup_scout -v"""
+"""popup_scout.py 테스트: cd popup_scout && python3 -m unittest test_popup_scout -v"""
+import tempfile
 import unittest
 from datetime import date
 
-from popup_scout import screen, select, render, reject_reason, normalize_key
+from popup_scout import index_rows, load_history, reject_reason, render, screen, select, status
 
 TODAY = date(2026, 11, 21)
 
 
 def make(**over):
     c = {
-        "name": "윈터 하우스 팝업", "brand": "테스트리빙", "category": "리빙",
+        "name": "윈터 하우스", "brand": "테스트리빙", "category": "리빙", "subcategory": "가구·인테리어",
         "venue": "더현대 서울 B1", "address": "서울 영등포구 여의대로 108", "region": "서울",
-        "start": "2026-11-20", "end": "2026-12-10", "hours": "10:30-20:00",
-        "summary": "요약", "why_now": "이유", "action": "행동",
-        "source_url": "https://example.com/notice", "source_type": "유통사 공식",
+        "start": "2026-11-20", "end": "2026-12-10",
+        "summary": "요약", "highlights": "연출", "reference": "참고",
+        "source_url": "https://example.com/news", "source_type": "보도 기반 기사",
     }
     c.update(over)
     return c
@@ -23,46 +24,72 @@ class RuleTests(unittest.TestCase):
     def test_valid(self):
         self.assertIsNone(reject_reason(make(), TODAY))
 
-    def test_open_window(self):
-        self.assertIsNone(reject_reason(make(start="2026-11-07"), TODAY))        # 14일 경과: 통과
-        self.assertIn("15일 경과", reject_reason(make(start="2026-11-06"), TODAY))
-        self.assertIsNone(reject_reason(make(start="2026-12-05", end="2026-12-31"), TODAY))  # D-14
+    def test_six_month_window(self):
+        # 종료일 기준 183일 이내면 통과, 넘으면 제외
+        self.assertIsNone(reject_reason(make(start="2026-05-01", end="2026-05-22"), TODAY))
+        self.assertIn("6개월 초과", reject_reason(make(start="2026-05-01", end="2026-05-21"), TODAY))
+        # 종료일 미확인이면 오픈일 기준
+        self.assertIn("6개월 초과", reject_reason(make(start="2026-05-01", end=None), TODAY))
+
+    def test_upcoming_window(self):
+        self.assertIsNone(reject_reason(make(start="2026-12-05", end="2026-12-31"), TODAY))
         self.assertIn("15일 남음", reject_reason(make(start="2026-12-06", end="2026-12-31"), TODAY))
 
-    def test_closing_soon(self):
-        self.assertIn("3일 이내", reject_reason(make(end="2026-11-24"), TODAY))
-        self.assertIsNone(reject_reason(make(end="2026-11-25"), TODAY))
-        self.assertIn("이미 종료", reject_reason(make(start="2026-11-10", end="2026-11-20"), TODAY))
+    def test_sources(self):
+        for ok in ("브랜드 공식", "유통사 공식", "보도자료", "보도 기반 기사"):
+            self.assertIsNone(reject_reason(make(source_type=ok), TODAY))
+        self.assertIn("출처 부족", reject_reason(make(source_type="블로그·SNS"), TODAY))
+        self.assertIn("출처 부족", reject_reason(make(source_type="정보 사이트"), TODAY))
 
-    def test_end_unknown_allowed(self):
-        self.assertIsNone(reject_reason(make(end=None), TODAY))
+    def test_categories(self):
+        self.assertIn("리빙·유아동이 아님", reject_reason(make(category="패션"), TODAY))
+        self.assertIn("목록에 없음", reject_reason(make(subcategory="캐릭터"), TODAY))  # 유아동 세부를 리빙에
+        self.assertIsNone(reject_reason(make(category="유아동", subcategory="캐릭터"), TODAY))
 
-    def test_category_and_source(self):
-        self.assertIn("카테고리", reject_reason(make(category="패션"), TODAY))
-        self.assertIn("공식 출처", reject_reason(make(source_type="언론 보도"), TODAY))
-        self.assertIn("필수 항목", reject_reason(make(source_url=""), TODAY))
+    def test_status(self):
+        self.assertEqual(status(make(), TODAY)[1], "운영 중")
+        self.assertEqual(status(make(start="2026-11-25"), TODAY)[1], "오픈 예정 D-4")
+        self.assertEqual(status(make(start="2026-10-01", end="2026-10-11"), TODAY)[1], "종료 (41일 전)")
 
-    def test_dedupe(self):
-        history = {normalize_key("테스트리빙더현대 서울 B1")}
-        r = screen([make(), make(brand="다른브랜드"), make(brand="다른브랜드")], TODAY, history)
-        self.assertEqual([c["brand"] for c in r.accepted], ["다른브랜드"])
+
+class HistoryTests(unittest.TestCase):
+    def test_history_from_notion_table(self):
+        page = (
+            "## 누적 목록\n\n"
+            "| 소개일 | 분류 | 브랜드 | 팝업 | 장소 | 시작일 |\n"
+            "| --- | --- | --- | --- | --- | --- |\n"
+            + index_rows([make()], date(2026, 11, 20)) + "\n\n다음 문단\n"
+        )
+        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as f:
+            f.write(page)
+        history = load_history(f.name)
+        r = screen([make(), make(venue="신세계 강남점"), make(brand="다른", ), make(brand="다른")], TODAY, history)
+        self.assertEqual([(c["brand"], c["venue"]) for c in r.accepted],
+                         [("테스트리빙", "신세계 강남점"), ("다른", "더현대 서울 B1")])
         reasons = [reason for _, reason in r.rejected]
-        self.assertIn("최근 7일 내 리스트에 이미 소개됨", reasons)
-        self.assertIn("오늘 후보 안에서 중복", reasons)
+        self.assertEqual(reasons, ["이전 리스트에서 이미 소개함", "오늘 후보 안에서 중복"])
 
 
 class SelectRenderTests(unittest.TestCase):
-    def test_balanced_selection_and_limit(self):
-        living = [make(brand=f"리빙{i}") for i in range(8)]
-        kids = [make(brand=f"키즈{i}", category="유아동") for i in range(3)]
+    def test_balance_and_subcategory_cap(self):
+        living = [make(brand=f"가구{i}") for i in range(6)] + [make(brand="향", subcategory="홈프래그런스")]
+        kids = [make(brand=f"키즈{i}", category="유아동", subcategory="완구·놀이") for i in range(2)]
         picked = select(living + kids, TODAY, 10)
-        self.assertEqual(len(picked), 10)
-        self.assertEqual(sum(c["category"] == "유아동" for c in picked), 3)
+        self.assertEqual(len(picked), 9)  # 후보 전체가 9개
+        self.assertEqual(sum(c["category"] == "유아동" for c in picked), 2)
+        # 상한 때문에 '향'이 가구 4번째보다 먼저 뽑혀야 함
+        first_six = [c["brand"] for c in picked[:6]]
+        self.assertIn("향", first_six)
 
-    def test_render_shortfall_warning(self):
+    def test_ongoing_before_ended(self):
+        ended = make(brand="끝남", start="2026-09-01", end="2026-09-10")
+        ongoing = make(brand="진행", start="2026-11-01", end="2026-12-31")
+        self.assertEqual(select([ended, ongoing], TODAY, 1)[0]["brand"], "진행")
+
+    def test_render_shortfall(self):
         md = render([make()], [], TODAY, 10)
         self.assertIn("1개뿐이라 10개를 채우지 못했습니다", md)
-        self.assertIn("테스트리빙 | 더현대 서울 B1", md)
+        self.assertIn("참고 포인트", md)
 
 
 if __name__ == "__main__":
