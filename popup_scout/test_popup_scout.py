@@ -43,6 +43,7 @@ class RuleTests(unittest.TestCase):
 
     def test_categories(self):
         self.assertIn("리빙·유아동이 아님", reject_reason(make(category="패션"), TODAY))
+        self.assertEqual(reject_reason(make(start=""), TODAY), "오픈일 미확인")
         self.assertIn("목록에 없음", reject_reason(make(subcategory="캐릭터"), TODAY))  # 유아동 세부를 리빙에
         self.assertIsNone(reject_reason(make(category="유아동", subcategory="캐릭터"), TODAY))
 

@@ -148,10 +148,12 @@ def parse_date(value) -> date | None:
 
 def reject_reason(c: dict, today: date) -> str | None:
     missing = [f for f in REQUIRED_FIELDS if not str(c.get(f) or "").strip()]
+    if "start" in missing:
+        return "오픈일 미확인"
     if missing:
         return f"필수 항목 누락: {', '.join(missing)}"
     if c["category"] not in CATEGORIES:
-        return f"분류 '{c['category']}'는 리빙·유아동이 아님"
+        return f"리빙·유아동이 아님 ({c['category']})"
     if c["subcategory"] not in SUBCATEGORIES[c["category"]]:
         return f"세부 분류 '{c['subcategory']}'가 {c['category']} 목록에 없음"
     if c["source_type"] not in ACCEPTED_SOURCE_TYPES:
