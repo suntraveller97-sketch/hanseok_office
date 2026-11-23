@@ -33,6 +33,7 @@
         "brand": "브랜드명",
         "category": "리빙" | "유아동",
         "subcategory": "가구·인테리어" 등 (SUBCATEGORIES 중 하나),
+        "channel": "백화점" | "복합몰" | "단독 공간" | "기타",
         "venue": "장소명 (예: 더현대 서울 B1 이벤트홀)",
         "address": "주소 또는 '미확인'",
         "region": "서울" 등 시·도,
@@ -41,6 +42,8 @@
         "summary": "어떤 팝업인지 1~2문장",
         "highlights": "공간 연출·체험 프로그램·한정 굿즈 등 눈에 띄는 요소",
         "reference": "기획에 참고할 점 1문장",
+        "space_size": "공간 규모 (예: '약 330㎡(100평)', '2개 층') 또는 '미확인'",
+        "photo_url": "현장·공간 사진이 있는 페이지 URL 또는 null",
         "source_url": "출처 URL",
         "source_type": "브랜드 공식" | "유통사 공식" | "보도자료" | "보도 기반 기사" | "정보 사이트" | "블로그·SNS"
       }
@@ -60,6 +63,8 @@ from pathlib import Path
 LOOKBACK_DAYS = 183      # 최근 6개월
 UPCOMING_DAYS = 14       # 오픈 예정은 14일 이내만
 MAX_PER_SUBCATEGORY = 3  # 한 세부 분류가 리스트를 독차지하지 않게
+CHANNELS = ("백화점", "복합몰", "단독 공간", "기타")
+PRIORITY_CHANNELS = ("백화점", "단독 공간")  # 대표 요청: 백화점 팝업·단독 팝업 우선
 DEFAULT_LIMIT = 10
 
 CATEGORIES = ("리빙", "유아동")
@@ -156,6 +161,10 @@ def reject_reason(c: dict, today: date) -> str | None:
         return f"리빙·유아동이 아님 ({c['category']})"
     if c["subcategory"] not in SUBCATEGORIES[c["category"]]:
         return f"세부 분류 '{c['subcategory']}'가 {c['category']} 목록에 없음"
+    if c.get("channel") and c["channel"] not in CHANNELS:
+        return f"채널 '{c['channel']}'은 {'/'.join(CHANNELS)} 중 하나여야 함"
+    if c.get("photo_url") and not str(c["photo_url"]).startswith(("http://", "https://")):
+        return "사진 URL 형식 오류"
     if c["source_type"] not in ACCEPTED_SOURCE_TYPES:
         return f"출처 부족 ({c['source_type']}만 있음)"
     if not str(c["source_url"]).startswith(("http://", "https://")):
@@ -214,7 +223,8 @@ def status(c: dict, today: date) -> tuple[int, str]:
 def select(accepted: list[dict], today: date, limit: int) -> list[dict]:
     """리빙·유아동을 번갈아 고르고, 한 세부 분류는 최대 3개까지. 자리가 남으면 상한 없이 채운다."""
     def order(c):
-        return (status(c, today)[0], -parse_date(c["start"]).toordinal())
+        priority = 0 if c.get("channel") in PRIORITY_CHANNELS else 1
+        return (status(c, today)[0], priority, -parse_date(c["start"]).toordinal())
 
     queues = {cat: sorted((c for c in accepted if c["category"] == cat), key=order) for cat in CATEGORIES}
     picked: list[dict] = []
@@ -279,12 +289,13 @@ def render(picked: list[dict], rejected: list[tuple[dict, str]], today: date, li
     lines += [
         "## 한눈에 보기",
         "",
-        "| # | 브랜드 | 팝업 | 분류 | 지역 | 기간 | 상태 |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
+        "| # | 브랜드 | 팝업 | 분류 | 채널 | 지역 | 기간 | 상태 |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for i, c in enumerate(picked, 1):
         lines.append(
             f"| {i} | {cell(c['brand'])} | {cell(c['name'])} | {cell(c['category'])} · {cell(c['subcategory'])} | "
+            f"{cell(c.get('channel'))} | "
             f"{cell(c['region'])} | {cell(period_text(c))} | {cell(status(c, today)[1])} |"
         )
     lines.append("")
@@ -296,7 +307,9 @@ def render(picked: list[dict], rejected: list[tuple[dict, str]], today: date, li
             "",
             f"- **분류**: {c['category']} · {c['subcategory']} · {status(c, today)[1]}",
             f"- **기간**: {period_text(c)}",
-            f"- **장소**: {c['venue']} ({c.get('address') or UNKNOWN})",
+            f"- **장소**: {c['venue']} ({c.get('address') or UNKNOWN}) · {c.get('channel') or UNKNOWN}",
+            f"- **공간 규모**: {c.get('space_size') or UNKNOWN}",
+            f"- **사진**: {('[보기](' + c['photo_url'] + ')') if c.get('photo_url') else UNKNOWN}",
             f"- **요약**: {c['summary']}",
             f"- **눈에 띄는 요소**: {c['highlights']}",
             f"- **참고 포인트**: {c['reference']}",

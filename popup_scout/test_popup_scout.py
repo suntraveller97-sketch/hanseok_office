@@ -13,7 +13,8 @@ def make(**over):
         "name": "윈터 하우스", "brand": "테스트리빙", "category": "리빙", "subcategory": "가구·인테리어",
         "venue": "더현대 서울 B1", "address": "서울 영등포구 여의대로 108", "region": "서울",
         "start": "2026-11-20", "end": "2026-12-10",
-        "summary": "요약", "highlights": "연출", "reference": "참고",
+        "summary": "요약", "highlights": "연출", "reference": "참고", "channel": "백화점",
+        "space_size": "약 100평", "photo_url": "https://example.com/photo",
         "source_url": "https://example.com/news", "source_type": "보도 기반 기사",
     }
     c.update(over)
@@ -87,10 +88,22 @@ class SelectRenderTests(unittest.TestCase):
         ongoing = make(brand="진행", start="2026-11-01", end="2026-12-31")
         self.assertEqual(select([ended, ongoing], TODAY, 1)[0]["brand"], "진행")
 
+    def test_priority_channel_first(self):
+        mall = make(brand="몰", channel="복합몰", start="2026-11-19")
+        dept = make(brand="백화점", channel="백화점", start="2026-11-01")
+        self.assertEqual(select([mall, dept], TODAY, 1)[0]["brand"], "백화점")
+
+    def test_photo_and_channel_checks(self):
+        self.assertIn("사진 URL", reject_reason(make(photo_url="photo.jpg"), TODAY))
+        self.assertIn("채널", reject_reason(make(channel="온라인"), TODAY))
+        self.assertIsNone(reject_reason(make(photo_url=None, space_size=None, channel=None), TODAY))
+
     def test_render_shortfall(self):
         md = render([make()], [], TODAY, 10)
         self.assertIn("1개뿐이라 10개를 채우지 못했습니다", md)
         self.assertIn("참고 포인트", md)
+        self.assertIn("[보기](https://example.com/photo)", md)
+        self.assertIn("**공간 규모**: 약 100평", md)
 
 
 if __name__ == "__main__":
